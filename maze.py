@@ -1,7 +1,6 @@
 from tile import Tile
 from json import load
 
-
 class Maze:
     def __init__(self, filename):
         # initalize / load maze from json file
@@ -55,7 +54,6 @@ class Maze:
         curr_tile = self.get_tile(player.row, player.col)
         
         self.tiles[curr_tile.row][curr_tile.col].visited = True
-        # self.tiles[curr_tile.row][curr_tile.col].color = (255, 255, 255)
 
         new_row = curr_tile.row
         new_col = curr_tile.col
@@ -73,14 +71,12 @@ class Maze:
             new_col += 1
 
         player.set_player_to_tile(self.get_tile(new_row, new_col))
-        # self.tiles[new_row][new_col].color = (255, 255, 255)
         self.tiles[new_row][new_col].visited = True
 
     def move_back(self, player, played_move):
         curr_tile = self.get_tile(player.row, player.col)
         
         self.tiles[curr_tile.row][curr_tile.col].visited = False
-        # self.tiles[curr_tile.row][curr_tile.col].color = (0, 255, 0)
 
         new_row = curr_tile.row
         new_col = curr_tile.col
@@ -99,11 +95,3 @@ class Maze:
 
         player.set_player_to_tile(self.get_tile(new_row, new_col))
         self.tiles[new_row][new_col].exclude_moves.add(played_move)     # Add move to exclude_moves as it is not correct move
-
-
-    # def get_unvisited_tile(self):
-        for row in range(self.size[0]):
-            for col in range(self.size[1]):
-                if self.tiles[row][col].visited == False:
-                    return self.tiles[row][col]
-        return None
