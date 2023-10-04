@@ -14,7 +14,7 @@ clock = pygame.time.Clock()
 FRAMERATE = 15
 
 # Load Maze and initialize Player
-MAZE = Maze(filename='MazeGenerator/maze.json')
+MAZE = Maze(filename='maze.json')
 PLAYER = Player(MAZE.get_start_tile())
 
 PATH = []
@@ -56,7 +56,7 @@ while True:
 
 # save screenshot of maze
 print('Saving image of maze')
-pygame.image.save(WINDOW, 'MazeSolver/maze-solved.png')
+pygame.image.save(WINDOW, 'maze-solved.png')
 
 print('Saved \nClose the window to exit')
 
