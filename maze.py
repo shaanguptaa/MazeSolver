@@ -31,89 +31,75 @@ class Maze:
     def get_start_tile(self):
         return self.tiles[self.start_tile[0]][self.start_tile[1]]
     
-    # def get_moves_for_tile(self, row, col, check_exclude_moves = True):
-    #     tile = self.get_tile(row, col)
-    #     moves = []
-    #     if tile.row > 0 and (not self.get_tile(tile.row - 1, tile.col).visited):
-    #         moves.append('top')
-    #     if tile.row < self.size[1] - 1 and (not self.get_tile(tile.row + 1, tile.col).visited):
-    #         moves.append('bottom')
-    #     if tile.col > 0 and (not self.get_tile(tile.row, tile.col - 1).visited):
-    #         moves.append('left')
-    #     if tile.col < self.size[0] - 1 and (not self.get_tile(tile.row, tile.col + 1).visited):
-    #         moves.append('right')
-        
-    #     if check_exclude_moves:
-    #         moves = list(set(moves) - tile.exclude_moves)
-    #     return moves
-        
-    # def move(self, player, pref_move):
-    #     curr_tile = self.get_tile(player.row, player.col)
-        
-    #     self.tiles[curr_tile.row][curr_tile.col].visited = True
-    #     self.tiles[curr_tile.row][curr_tile.col].color = (255, 255, 255)
+    def reached_finish(self, player):
+        return player.row == self.end_tile[0] and player.col == self.end_tile[1]
+    
+    def get_moves_for_tile(self, row, col):
+        tile = self.get_tile(row, col)
+        moves = []
 
-    #     new_row = curr_tile.row
-    #     new_col = curr_tile.col
+        if not tile.top and not self.tiles[row - 1][col].visited:
+            moves.append('top')
+        if not tile.bottom and not self.tiles[row + 1][col].visited:
+            moves.append('bottom')
+        if not tile.left and not self.tiles[row][col - 1].visited:
+            moves.append('left')
+        if not tile.right and not self.tiles[row][col + 1].visited:
+            moves.append('right')
         
-    #     if pref_move == 'top':
-    #         new_row -= 1
-    #         self.tiles[curr_tile.row][curr_tile.col].top = False
-    #         self.tiles[new_row][new_col].bottom = False
+        moves = list(set(moves) - tile.exclude_moves)
 
-    #     elif pref_move == 'bottom':
-    #         new_row += 1
-    #         self.tiles[curr_tile.row][curr_tile.col].bottom = False
-    #         self.tiles[new_row][new_col].top = False
+        return moves
         
-    #     elif pref_move == 'left':
-    #         new_col -= 1
-    #         self.tiles[curr_tile.row][curr_tile.col].left = False
-    #         self.tiles[new_row][new_col].right = False
+    def move(self, player, pref_move):
+        curr_tile = self.get_tile(player.row, player.col)
         
-    #     elif pref_move == 'right':
-    #         new_col += 1
-    #         self.tiles[curr_tile.row][curr_tile.col].right = False
-    #         self.tiles[new_row][new_col].left = False
+        self.tiles[curr_tile.row][curr_tile.col].visited = True
+        # self.tiles[curr_tile.row][curr_tile.col].color = (255, 255, 255)
 
-    #     player.set_player_to_tile(self.get_tile(new_row, new_col))
-    #     self.tiles[new_row][new_col].color = (255, 255, 255)
-    #     self.tiles[new_row][new_col].visited = True
-
-    # def move_back(self, player, played_move):
-    #     curr_tile = self.get_tile(player.row, player.col)
+        new_row = curr_tile.row
+        new_col = curr_tile.col
         
-    #     self.tiles[curr_tile.row][curr_tile.col].visited = False
-    #     self.tiles[curr_tile.row][curr_tile.col].color = (0, 255, 0)
+        if pref_move == 'top':
+            new_row -= 1
 
-    #     new_row = curr_tile.row
-    #     new_col = curr_tile.col
+        elif pref_move == 'bottom':
+            new_row += 1
         
-    #     if played_move == 'bottom':
-    #         new_row -= 1
-    #         self.tiles[curr_tile.row][curr_tile.col].top = True
-    #         self.tiles[new_row][new_col].bottom = True
-
-    #     elif played_move == 'top':
-    #         new_row += 1
-    #         self.tiles[curr_tile.row][curr_tile.col].bottom = True
-    #         self.tiles[new_row][new_col].top = True
+        elif pref_move == 'left':
+            new_col -= 1
         
-    #     elif played_move == 'right':
-    #         new_col -= 1
-    #         self.tiles[curr_tile.row][curr_tile.col].left = True
-    #         self.tiles[new_row][new_col].right = True
+        elif pref_move == 'right':
+            new_col += 1
+
+        player.set_player_to_tile(self.get_tile(new_row, new_col))
+        # self.tiles[new_row][new_col].color = (255, 255, 255)
+        self.tiles[new_row][new_col].visited = True
+
+    def move_back(self, player, played_move):
+        curr_tile = self.get_tile(player.row, player.col)
         
-    #     elif played_move == 'left':
-    #         new_col += 1
-    #         self.tiles[curr_tile.row][curr_tile.col].right = True
-    #         self.tiles[new_row][new_col].left = True
+        self.tiles[curr_tile.row][curr_tile.col].visited = False
+        # self.tiles[curr_tile.row][curr_tile.col].color = (0, 255, 0)
 
-    #     player.set_player_to_tile(self.get_tile(new_row, new_col))
-    #     self.tiles[new_row][new_col].exclude_moves.add(played_move)
+        new_row = curr_tile.row
+        new_col = curr_tile.col
+        
+        if played_move == 'bottom':
+            new_row -= 1
 
-    # def reached_finish(self, player):
-    #     return player.row == self.end_tile[0] and player.col == self.end_tile[1]
+        elif played_move == 'top':
+            new_row += 1
+        
+        elif played_move == 'right':
+            new_col -= 1
+        
+        elif played_move == 'left':
+            new_col += 1
+
+        player.set_player_to_tile(self.get_tile(new_row, new_col))
+        self.tiles[new_row][new_col].exclude_moves.add(played_move)     # Add move to exclude_moves as it is not correct move
+
 
     # def get_unvisited_tile(self):
         for row in range(self.size[0]):
